@@ -9,6 +9,7 @@
 #import "HUSemiCircleChart.h"
 #import "HUChartEntry.h"
 
+
 @implementation HUSemiCircleChart
 @synthesize data;
 @synthesize colors;
@@ -79,10 +80,10 @@
     UIRectFill([self bounds]);
 
     // Draw
-    float R = rect.size.width/2;
-    float r = 2*R/5;
+    float R = rect.size.width/2;//是外圆半径
+    float r = 2*R/4;//内圆半径       R、r决定环的宽度
     CGPoint origin = CGPointMake(rect.origin.x + rect.size.width/2,
-                                 rect.origin.y + 5*rect.size.height/6);
+                                 rect.origin.y + rect.size.height/2);//原点
 
     // Draw large circle
     [self drawCircleInContext:context withRadian:r atOrigin:origin];
@@ -153,7 +154,7 @@
     CGContextSaveGState(context);
     CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 1.0);
     CGContextSetLineWidth(context, 0.0);
-    CGContextAddArc(context, origin.x, origin.y, r, 0, M_PI, YES);
+    CGContextAddArc(context, origin.x, origin.y, r, 0, ANGLE, YES);
     CGContextClosePath(context);
     CGContextStrokePath(context);
     CGContextRestoreGState(context);
@@ -172,7 +173,7 @@
         unitStep = 2048;
     }
 
-    float drawStep = M_PI/unitStep;
+    float drawStep = ANGLE/unitStep;
 
     CGContextSaveGState(context);
     CGContextSetStrokeColorWithColor(context, [color CGColor]);
@@ -294,7 +295,7 @@
     for(HUChartEntry *entry in self.data){
         temp_total += [[entry value] floatValue];
         // Convert from 100-based to PI-based
-        float percentage = (temp_total/total) * M_PI;
+        float percentage = (temp_total/total) * ANGLE;
         [percentages addObject:[NSNumber numberWithFloat:percentage]];
     }
     return percentages;
